@@ -1,0 +1,27 @@
+{
+  "name": "lookup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vashistkamal11/lookup.git"
+  },
+  "author": "Kamal Vashist",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vashistkamal11/lookup/issues"
+  },
+  "homepage": "https://github.com/vashistkamal11/lookup#readme",
+  "devDependencies": {
+    "electron": "1.7.9"
+  },
+  "dependencies": {
+    "bootstrap": "^4.0.0",
+    "jquery": "^3.3.1",
+    "mongojs": "^2.4.1"
+  }
+}

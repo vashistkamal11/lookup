@@ -1,0 +1,50 @@
+<! doc html>
+<html>
+
+  <head>
+    <title>
+      Attendance Lookup
+    </title>
+  </head>
+
+  <script>
+    $ = jQuery = require('jquery')
+  </script>
+
+  <body>
+
+    <div class="class-lg-12">
+      <button class="btn btn-success" id="addname">
+          Add Name
+        </button>
+    </div>
+
+    <div class="col-lg-12" id="maindisplay" style="margin-top:10px">
+    </div>
+    <div id="addnamedialog" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Add Name </h4>
+          </div>
+          <div class="modal-body">
+            <div id="smallsafeamount"></div>
+            <input type="text" class="form-control" id="name" placeholder="Enter Name to Add" style="width:80% ;height:30px;margin-top:10px;"></input>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" id="addnamesave">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link href="./bootstrap2-toggle.min.css" rel="stylesheet">
+
+    <script src="./bootstrap2-toggle.min.js"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./homewindow.js"></script>
+
+  </body>
