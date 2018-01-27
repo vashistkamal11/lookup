@@ -43,9 +43,6 @@ var checkboxclick = function() {
   let dblist = mongojs('127.0.0.1/list', ['list']);
   let value = returncheckvalue(this);
   let name = returnnamevalue(this);
-  for (let i = 0; i < name.length; i++) {
-    console.log(name[i]);
-  }
   let bgchange = this.firstChild;
   if (value == false) {
     bgchange.firstChild.nextSibling.style['background-color'] = '#d9e4f4';
@@ -122,12 +119,35 @@ var displaynames = function() {
     $("[data-toggle='toggle']").bootstrapToggle();
   })
 }
+
+var changeScreen = function() {
+  var maindisplay = $('#maindisplay');
+  let scrollHeight = maindisplay.prop('scrollHeight');
+  let offsetHeight = maindisplay.prop('offsetHeight');
+  if (scrollHeight != offsetHeight) {
+    let scrolltop = maindisplay.scrollTop();
+    if (scrolltop == (scrollHeight - offsetHeight)) {
+      maindisplay.scrollTop(1);
+    } else {
+      scrolltop += (offsetHeight - 20);
+      if (scrolltop >= (scrollHeight - offsetHeight)) {
+        scrolltop = (scrollHeight - offsetHeight);
+      }
+      maindisplay.scrollTop(scrolltop);
+    }
+  }
+}
 window.onload = function() {
   displaynames();
+
   $("#addname").on('click', () => {
     $('#addnamedialog').modal('show');
     $('#name').focus();
   });
-
   $('#addnamesave').on('click', addname);
+  $('#maindisplay').on('scroll', () => {
+    window.clearInterval(changeScreenInterval);
+    changeScreenInterval = window.setInterval(changeScreen, 5000);
+  })
+  changeScreenInterval = window.setInterval(changeScreen, 5000);
 }
