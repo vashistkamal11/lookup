@@ -6,6 +6,18 @@ const remote = electron.remote;
 $ = require('jquery');
 jQuery = require('jquery');
 
+var comparefunction = function(first, second) {
+  let fname = first.name.toUpperCase();
+  let sname = second.name.toUpperCase();
+  if (fname == sname) {
+    return 0;
+  } else if (fname < sname) {
+    return -1;
+  } else {
+    return 1;
+  }
+}
+
 var createlistitem = function(div, Name, status) {
   let chckd = "";
   let color = "";
@@ -110,6 +122,7 @@ var displaynames = function() {
       alert(err);
       return;
     }
+    records.sort(comparefunction);
     for (name in records) {
       let newdiv = document.createElement('div');
       createlistitem(newdiv, records[name].name, records[name].status);
@@ -139,7 +152,16 @@ var changeScreen = function() {
 }
 window.onload = function() {
   displaynames();
-
+  $(document).on('keyup', (e) => {
+    if (e.key == 's' && e.ctrlKey) {
+      $('#searchbox').css('display', 'block');
+    }
+    if (e.key == 'Escape') {
+      document.querySelector("suggestion-Box").shadowRoot.querySelector('#inputfield').value = "";
+      document.querySelector("suggestion-Box").shadowRoot.querySelector('#namelist').innerHTML = "";
+      $('#searchbox').css('display', 'none');
+    }
+  })
   $("#addname").on('click', () => {
     $('#addnamedialog').modal('show');
     $('#name').focus();
