@@ -2,7 +2,11 @@ const electron = require("electron")
 const ipc = electron.ipcRenderer
 const mongojs = require("mongojs")
 const remote = electron.remote;
-
+const fs = require('fs');
+const path = require('path');
+const {
+  dialog
+} = require('electron').remote;
 $ = require('jquery');
 jQuery = require('jquery');
 
@@ -151,25 +155,41 @@ var changeScreen = function() {
   }
 }
 window.onload = function() {
-  displaynames();
-  $(document).on('keyup', (e) => {
-    if (e.key == 's' && e.ctrlKey) {
-      $('#searchbox').css('display', 'block');
-    }
-    if (e.key == 'Escape') {
-      document.querySelector("suggestion-Box").shadowRoot.querySelector('#inputfield').value = "";
-      document.querySelector("suggestion-Box").shadowRoot.querySelector('#namelist').innerHTML = "";
-      $('#searchbox').css('display', 'none');
-    }
-  })
-  $("#addname").on('click', () => {
-    $('#addnamedialog').modal('show');
-    $('#name').focus();
-  });
-  $('#addnamesave').on('click', addname);
-  $('#maindisplay').on('scroll', () => {
-    window.clearInterval(changeScreenInterval);
-    changeScreenInterval = window.setInterval(changeScreen, 5000);
-  })
-  changeScreenInterval = window.setInterval(changeScreen, 5000);
+  $('#test').BootSideMenu();
+  // displaynames();
+  // $(document).on('keyup', (e) => {
+  //   if (e.key == 's' && e.ctrlKey) {
+  //     $('#searchbox').css('display', 'block');
+  //   }
+  //   if (e.key == 'Escape') {
+  //     document.querySelector("suggestion-Box").shadowRoot.querySelector('#inputfield').value = "";
+  //     document.querySelector("suggestion-Box").shadowRoot.querySelector('#namelist').innerHTML = "";
+  //     $('#searchbox').css('display', 'none');
+  //   }
+  // })
+  // $("#addname").on('click', () => {
+  //   $('#addnamedialog').modal('show');
+  //   $('#name').focus();
+  // });
+  // $('#addnamesave').on('click', addname);
+  // $('#maindisplay').on('scroll', () => {
+  //   window.clearInterval(changeScreenInterval);
+  //   changeScreenInterval = window.setInterval(changeScreen, 5000);
+  // })
+  // changeScreenInterval = window.setInterval(changeScreen, 5000);
+  // dialog.showOpenDialog(remote.getCurrentWindow(), {
+  //   title: "lk"
+  // }, function(filenames) {
+  //   console.log(filenames[0]);
+  //   let source = fs.createReadStream(filenames[0]);
+  //   let dest = fs.createWriteStream(path.resolve(__dirname, path.basename(filenames[0])));
+  //
+  //   source.pipe(dest);
+  //   source.on('end', function() {
+  //     console.log("done");
+  //   })
+  //   source.on('err', function() {
+  //     console.log('error');
+  //   })
+  // });
 }
