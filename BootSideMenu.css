@@ -1,5 +1,5 @@
 .bootsidemenu {
-    z-index: 999999;
+    z-index: 0;
     position: fixed;
     top: -1px;
     bottom: -1px;

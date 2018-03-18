@@ -27,24 +27,22 @@ var createlistitem = function(div, Name, status) {
   let color = "";
   if (status == "Off Duty") {
     chckd = "";
-    color = "red";
   } else {
     chckd = "checked";
-    color = "#d9e4f4";
   }
   let template = `<div style="border-radius:5px; margin-top :5px; margin-down:5px">
-    <div  class="row" style="height:50px; background-color :${color};">
+    <div  class="row" style="height:50px;">
       <div class="col-lg-6" style="padding-top:10px;">${Name}</div>
-      <div class="col-lg-2 offset-lg-4" style="padding-top:5px;">
-        <input type="checkbox" ${chckd} data-toggle="toggle" data-width="100" data-height="40" data-onstyle="default" data-offstyle="primary" data-on="On-Duty" data-off="Off-Duty" data-size="large"></input>
+      <div class="col-lg-2 offset-lg-2" style="padding-top:5px;">
+        <input type="checkbox" ${chckd} data-toggle="toggle" data-width="100" data-height="40" data-onstyle="success" data-offstyle="primary" data-on="On-Duty" data-off="Off-Duty" data-size="small"></input>
       </div>
     </div>
   </div>`
   let dv = $.parseHTML(template);
   div.appendChild(dv[0]);
-  div.addEventListener('click', () => {
+  div.addEventListener('click', (e) => {
     checkboxclick.call(div);
-  });
+  })
 }
 
 var returncheckvalue = function(element) {
@@ -56,13 +54,11 @@ var returnnamevalue = function(element) {
 }
 
 var checkboxclick = function() {
-  let dblist = mongojs('127.0.0.1/list', ['list']);
   let value = returncheckvalue(this);
   let name = returnnamevalue(this);
   let bgchange = this.firstChild;
   if (value == false) {
-    bgchange.firstChild.nextSibling.style['background-color'] = '#d9e4f4';
-    dblist.list.update({
+    dbdetails.details.update({
       "name": name
     }, {
       $set: {
@@ -76,8 +72,7 @@ var checkboxclick = function() {
       alert(msg);
     })
   } else {
-    bgchange.firstChild.nextSibling.style['background-color'] = 'red';
-    dblist.list.update({
+    dbdetails.details.update({
       "name": name
     }, {
       $set: {
@@ -119,19 +114,76 @@ var addname = function() {
   $('#addnamedialog').modal('hide');
 }
 
-var displaynames = function() {
-  let dblist = mongojs('127.0.0.1/list', ['list']);
-  dblist.list.find({}, (err, records) => {
+
+var updateFunction = function() {
+
+}
+
+var removeFunction = function(namearg) {
+  dialog.showMessageBox(remote.getCurrentWindow(), {
+    title: "confirm remove",
+    type: "warning",
+    buttons: ["NO", "YES"],
+    defaultId: 0,
+    message: "Are you sure you want to remove " + namearg + " from list ?",
+  }, function(response) {
+    if (response == 1) {
+      dbnames.names.remove({
+        name: namearg
+      }, (err, msg) => {
+        if (err) {
+          alert(err);
+          return;
+        }
+        dbdetails.details.remove({
+          name: namearg
+        }, (err, msg) => {
+          if (err) {
+            alert(err);
+            return;
+          }
+        })
+      })
+    }
+  })
+}
+
+var makelist = function() {
+  dbdetails.details.find({}, (err, records) => {
     if (err) {
       alert(err);
       return;
     }
     records.sort(comparefunction);
-    for (name in records) {
+    for (index in records) {
       let newdiv = document.createElement('div');
-      createlistitem(newdiv, records[name].name, records[name].status);
-      $('#maindisplay').append(newdiv);
+      createlistitem(newdiv, records[index].name, records[index].status);
+      $('#namelist').append(newdiv);
+
+      let contextmenu = [
+        [{
+            text: "update",
+            action: function() {
+              var fname = records[index].name;
+              return function() {
+                updateFunction(fname);
+              }
+            }()
+          },
+          {
+            text: "remove",
+            action: function() {
+              var fname = records[index].name;
+              return function() {
+                removeFunction(fname);
+              }
+            }()
+          }
+        ]
+      ]
+      $(newdiv).contextMenu(contextmenu);
     }
+
     $("[data-toggle='toggle']").bootstrapToggle('destroy')
     $("[data-toggle='toggle']").bootstrapToggle();
   })
@@ -154,24 +206,26 @@ var changeScreen = function() {
     }
   }
 }
+
 window.onload = function() {
-  $('#test').BootSideMenu();
-  // displaynames();
-  // $(document).on('keyup', (e) => {
-  //   if (e.key == 's' && e.ctrlKey) {
-  //     $('#searchbox').css('display', 'block');
-  //   }
-  //   if (e.key == 'Escape') {
-  //     document.querySelector("suggestion-Box").shadowRoot.querySelector('#inputfield').value = "";
-  //     document.querySelector("suggestion-Box").shadowRoot.querySelector('#namelist').innerHTML = "";
-  //     $('#searchbox').css('display', 'none');
-  //   }
-  // })
-  // $("#addname").on('click', () => {
-  //   $('#addnamedialog').modal('show');
-  //   $('#name').focus();
-  // });
-  // $('#addnamesave').on('click', addname);
+  $('#test').BootSideMenu({
+    side: "right",
+    duration: 500,
+    autoClose: true,
+    width: "30%",
+    closeOnClick: true
+  });
+  try {
+    dbnames = mongojs('127.0.0.1/info', ['names']);
+    dbdetails = mongojs('127.0.0.1/info', ['details']);
+  } catch (err) {
+    alert(err.message)
+  }
+  makelist();
+  $("#addnamebutton").on('click', () => {
+    $('#addnamedialog').modal('show');
+  });
+  $('#addnamesave').on('click', addname);
   // $('#maindisplay').on('scroll', () => {
   //   window.clearInterval(changeScreenInterval);
   //   changeScreenInterval = window.setInterval(changeScreen, 5000);

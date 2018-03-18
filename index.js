@@ -6,4 +6,5 @@ let win;
 app.on('ready', function() {
   win = new BrowserWindow();
   win.loadURL(`file://${__dirname}/homewindow.html`);
+  win.maximize();
 })

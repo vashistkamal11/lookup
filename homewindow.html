@@ -12,8 +12,6 @@
   </script>
 
   <body background="./bg/6.jpg">
-
-
     <div class="container-fluid" style="margin-top:10px; margin-left:45px; ">
       <div class="row" style="height : 45%; margin-left:20px">
         <div class="col-lg-5 row" id="box1" style="background-image : url('./bg/4.jpg'); border-radius : 10px">
@@ -38,7 +36,7 @@
       <div class="row" style="height : 45%; margin-left:20px; margin-top:20px">
         <div class="col-lg-5 row" id="box3" style="background-image : url('./bg/4.jpg') ; border-radius: 10px">
           <div class="col-lg-6" style=" height : 100%;">
-            <img src="./bg/1.jpg" style="width:100%; height : 75%; margin-top:25px">
+            <img id="img1" src="./bg/1.jpg" style="width:100%; height : 75%; margin-top:25px">
           </div>
           <div class="col-lg-6">
             kamal vashist
@@ -62,13 +60,13 @@
     <div id="addnamedialog" class="modal fade">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Add Name </h4>
-          </div>
           <div class="modal-body">
             <div id="smallsafeamount"></div>
-            <input type="text" class="form-control" id="name" placeholder="Enter Name to Add" style="width:80% ;height:30px;margin-top:10px;"></input>
+            <input type="text" class="form-control" id="inputname" placeholder="Enter Name to Add" style="width:80% ;height:30px;margin-top:10px;"></input>
+            <input type="text" class="form-control" id="inputline1" placeholder="First Line" style="width:80% ;height:30px;margin-top:10px;"></input>
+            <input type="text" class="form-control" id="inputline2" placeholder="Second Line" style="width:80% ;height:30px;margin-top:10px;"></input>
+            <input type="text" class="form-control" id="inputline3" placeholder="Third line" style="width:80% ;height:30px;margin-top:10px;"></input>
+            <input type="text" class="form-control" id="inputline4" placeholder="Fourth line" style="width:80% ;height:30px;margin-top:10px;"></input>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -78,19 +76,25 @@
       </div>
     </div>
     <div id="test">
+      <div class="row">
+        <button class="btn btn-primary col-lg-4" style="margin-right : 0px" id="addnamebutton">
+        Add Name
+      </button>
+      </div>
+      <div id="namelist" style="margin-top : 10px ; margin-left : 5px; width : 93%; height : auto;">
+      </div>
     </div>
     <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="./bootstrap2-toggle.min.css">
     <link rel="stylesheet" href="./BootSideMenu.css">
+    <link rel="stylesheet" href="./contextMenu.min.css">
 
     <script src="./bootstrap2-toggle.min.js"></script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="./homewindow.js"></script>
     <script src="./BootSideMenu.js"></script>
-    <div class="col-lg-12" id="searchbox" style="display:none ; top:10px ; position:absolute;">
-      <!-- <suggestion-Box class="col-lg-12">
-      </suggestion-Box> -->
-    </div>
+    <script src="./contextMenu.min.js"></script>
+    <script src="./homewindow.js"></script>
+
   </body>
 
 </html>
