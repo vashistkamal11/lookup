@@ -89,34 +89,61 @@ var checkboxclick = function() {
 }
 
 var addname = function() {
-  let newname = $('#name').val();
-
-  if (newname == "") {
-    alert("Please enter a Valid Value");
+  let newname = $('#inputname').val();
+  let imgpath = $('#inputimg').val();
+  if (newname == "" || imgpath == "") {
+    alert("Please enter valid values");
     return;
   }
+  removePerson(newname);
 
-  let dblist = mongojs('127.0.0.1/list', ['list']);
-  let obj = {
+  let detailsobject = {
     "name": newname,
-    "status": "Off Duty"
+    "line1": $('#inputline1').val(),
+    "line2": $('#inputline2').val(),
+    "line3": $('#inputline3').val(),
+    "line4": $('#inputline4').val(),
+    "imagename": path.extname($('#inputimg').attr('value'))
   }
 
-  dblist.list.insert(obj, (err, msg) => {
+  if ($('#inputstatus').is(":checked")) {
+    detailsobject.status = "On Duty";
+  } else {
+    detailsobject.status = "Off Duty";
+  }
+
+  let nameobject = {
+    "name": newname
+  }
+
+  dbdetails.details.insert(detailsobject, (err, msg) => {
     if (err) {
       alert(err);
+      removePerson(newname);
       return;
     }
-    alert(msg);
+    dbnames.names.insert(nameobject, (err, msg) => {
+      if (err) {
+        alert(err);
+        removePerson(newname);
+        return;
+      }
+      copyImage($('#inputimg').attr('value'), newname + detailsobject.imagename);
+      $('#inputname').val("");
+      $('#inputline1').val("");
+      $('#inputline2').val("");
+      $('#inputline3').val("");
+      $('#inputline4').val("");
+      $('#addnamedialog').modal('hide');
+    })
   })
 
-  $('#name').val("");
-  $('#addnamedialog').modal('hide');
 }
 
 
-var updateFunction = function() {
-
+var updateFunction = function(namearg) {
+  $('#addnamedialog').modal('show');
+  $('#inputname').val(namearg);
 }
 
 var removeFunction = function(namearg) {
@@ -128,23 +155,39 @@ var removeFunction = function(namearg) {
     message: "Are you sure you want to remove " + namearg + " from list ?",
   }, function(response) {
     if (response == 1) {
-      dbnames.names.remove({
+      removePerson(namearg)
+    }
+  })
+}
+
+var removePerson = function(namearg) {
+  dbnames.names.remove({
+    name: namearg
+  }, (err, msg) => {
+    if (err) {
+      alert(err);
+      return;
+    }
+    dbdetails.details.find({
+      name: namearg
+    }, (err, records) => {
+      if (err || records[0] == undefined) {
+        return;
+      }
+      let ext = records[0].imagename;
+      try {
+        fs.unlink('./resources/displayimages/' + namearg + ext);
+      } catch (err) {}
+      dbdetails.details.remove({
         name: namearg
       }, (err, msg) => {
         if (err) {
           alert(err);
           return;
         }
-        dbdetails.details.remove({
-          name: namearg
-        }, (err, msg) => {
-          if (err) {
-            alert(err);
-            return;
-          }
-        })
+
       })
-    }
+    })
   })
 }
 
@@ -189,6 +232,7 @@ var makelist = function() {
   })
 }
 
+
 var changeScreen = function() {
   var maindisplay = $('#maindisplay');
   let scrollHeight = maindisplay.prop('scrollHeight');
@@ -207,6 +251,31 @@ var changeScreen = function() {
   }
 }
 
+var BrowseButtonFunction = function() {
+  dialog.showOpenDialog(remote.getCurrentWindow(), {
+    title: "select image"
+  }, function(filenames) {
+    if (filenames != undefined && filenames.length == 1) {
+      $('#inputimg').attr('value', filenames[0]);
+    } else if (filenames.length > 1) {
+      alert("Please Select a Single file");
+    }
+  });
+}
+
+var copyImage = function(filename, namearg) {
+  let source = fs.createReadStream(filename);
+  let dest = fs.createWriteStream(path.resolve(__dirname + "/resources/displayimages", namearg));
+  source.pipe(dest);
+  source.on('err',
+    function() {
+      alert("Please Try Again");
+      removePerson(namearg);
+    })
+  source.on('finish', function() {
+    $('#inputimg').attr("value", "");
+  })
+}
 window.onload = function() {
   $('#test').BootSideMenu({
     side: "right",
@@ -226,24 +295,10 @@ window.onload = function() {
     $('#addnamedialog').modal('show');
   });
   $('#addnamesave').on('click', addname);
+  $('#browsebutton').on('click', BrowseButtonFunction);
   // $('#maindisplay').on('scroll', () => {
   //   window.clearInterval(changeScreenInterval);
   //   changeScreenInterval = window.setInterval(changeScreen, 5000);
   // })
   // changeScreenInterval = window.setInterval(changeScreen, 5000);
-  // dialog.showOpenDialog(remote.getCurrentWindow(), {
-  //   title: "lk"
-  // }, function(filenames) {
-  //   console.log(filenames[0]);
-  //   let source = fs.createReadStream(filenames[0]);
-  //   let dest = fs.createWriteStream(path.resolve(__dirname, path.basename(filenames[0])));
-  //
-  //   source.pipe(dest);
-  //   source.on('end', function() {
-  //     console.log("done");
-  //   })
-  //   source.on('err', function() {
-  //     console.log('error');
-  //   })
-  // });
 }

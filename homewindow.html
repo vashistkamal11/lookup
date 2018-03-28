@@ -11,7 +11,7 @@
     $ = jQuery = require('jquery')
   </script>
 
-  <body background="./bg/6.jpg">
+  <body background="./bg/1.jpg">
     <div class="container-fluid" style="margin-top:10px; margin-left:45px; ">
       <div class="row" style="height : 45%; margin-left:20px">
         <div class="col-lg-5 row" id="box1" style="background-image : url('./bg/4.jpg'); border-radius : 10px">
@@ -67,6 +67,11 @@
             <input type="text" class="form-control" id="inputline2" placeholder="Second Line" style="width:80% ;height:30px;margin-top:10px;"></input>
             <input type="text" class="form-control" id="inputline3" placeholder="Third line" style="width:80% ;height:30px;margin-top:10px;"></input>
             <input type="text" class="form-control" id="inputline4" placeholder="Fourth line" style="width:80% ;height:30px;margin-top:10px;"></input>
+            <div class="checkbox">
+              <label><input type="checkbox" id = "inputstatus" value="" style = "margin-top: 20px" >On Duty</label>
+            </div>
+            <input type="text" class="form-control" id="inputimg" style="width:80% ;height:30px;margin-top:10px;dislpay : inline-block;" readonly></input>
+            <button class="btn btn-default" id="browsebutton" style="display : inline-block;">Browse</button>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
